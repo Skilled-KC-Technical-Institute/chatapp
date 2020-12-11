@@ -5,16 +5,19 @@ function buttonClick() {
     }).catch(function(error){
         console.log(error); 
     }); 
-    
+
     //get all the mesasges 
     getMessages().then(function(messages){
        // [{ name : "", message: ""}]
+       let h4 = document.createElement('h4');
+       let p = document.createElement('p');
+       let messagesList = document.getElementById("messages"); 
+
        messages.forEach( function(message){
-        document.getElementById("#messages").append(
-            `<h4>${message.name}</h4> 
-             <p>${message.message}<p> 
-            `
-        )
+        h4.innerHTML = message.name;
+        p.innerHTML = message.message; 
+        messagesList.appendChild(h4); 
+        messagesList.appendChild(p); 
        })
     }).catch(function(error){
         console.log(error); 
@@ -44,14 +47,14 @@ async function sendMessage(){
 
     let requestOptions = {
         method: "POST",
-        body: message, 
+        body: JSON.stringify(message), 
         headers : { "Content-Type": "application/json"} 
     }
 
     const response = await fetch("/messages", requestOptions); 
 
     if(response.status != 200){
-        throw Error(body.message); 
+        throw Error("Error!"); 
     }
 
     return true; 
