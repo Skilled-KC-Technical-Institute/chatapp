@@ -1,3 +1,7 @@
+let socket = io(); 
+
+socket.on('message', addMessage); 
+
 function buttonClick() {
     //send the message 
     sendMessage().then(function(retVal){
@@ -5,25 +9,19 @@ function buttonClick() {
     }).catch(function(error){
         console.log(error); 
     }); 
-
-    //get all the mesasges 
-    getMessages().then(function(messages){
-       // [{ name : "", message: ""}]
-       let h4 = document.createElement('h4');
-       let p = document.createElement('p');
-       let messagesList = document.getElementById("messages"); 
-
-       messages.forEach( function(message){
-        h4.innerHTML = message.name;
-        p.innerHTML = message.message; 
-        messagesList.appendChild(h4); 
-        messagesList.appendChild(p); 
-       })
-    }).catch(function(error){
-        console.log(error); 
-    });  
 }
 
+function addMessage(message){ 
+    let messagesList = document.getElementById("messages"); 
+    let h4 = document.createElement('h4');
+    let p = document.createElement('p');
+    h4.innerHTML = message.name;
+    p.innerHTML = message.message; 
+    messagesList.appendChild(h4); 
+    messagesList.appendChild(p);
+}
+
+//didn't use this api call
 async function getMessages(){
     let requestOptions = {
         method: "GET",

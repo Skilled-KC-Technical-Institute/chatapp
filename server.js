@@ -9,8 +9,8 @@ const Message = require("./models/Messages.js");
 const chatApp = express();
 const port = 3000; 
 
-//open the server for connections 
-chatApp.listen(port, () => console.log("We're listening on this server")); 
+const http = require('http').Server(chatApp); 
+var io = require('socket.io')(http); 
 
 //server static files 
 chatApp.use(express.static( path.join(__dirname, 'public'))); 
@@ -35,6 +35,15 @@ const db = mongoose.connection;
 //open the connection to the database 
 db.on('error', console.error.bind(console, "MongoDB connection error: ")); 
 
+//open socket stream
+io.on('connection', function(){
+    console.log("A user has connected!"); 
+})
+
+http.listen(3000, ()=>{
+    console.log("running a server");
+})
+
 //get messages 
 chatApp.get('/messages', function(request, response){
     Message.find(function(error, messages){
@@ -54,6 +63,7 @@ chatApp.post('/messages', function(request,response){
             response.sendStatus(500); 
             return console.error(error); 
         }; 
+        io.emit('message', request.body); 
         response.sendStatus(200); 
     })
 }); 
