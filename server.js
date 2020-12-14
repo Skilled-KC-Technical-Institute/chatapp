@@ -55,7 +55,7 @@ chatApp.get('/messages', function(request, response){
     }); 
 }); 
 
-//receive messages 
+//receive messages at 127.0.0.1:3000/messages
 chatApp.post('/messages', function(request,response){
     let message = new Message(request.body); 
     message.save(function(error, message){
